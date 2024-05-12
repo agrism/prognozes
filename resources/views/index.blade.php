@@ -28,7 +28,7 @@
                             <tr class="border-b border-blue-gray-900">
                                 <td class="py-3 px-4">
                                     <div style="display: inline-block">
-                                        {!! svg('flag-4x3-' . data_get($game, 'teamHome.code'), ['class' => 'w-6'])->toHtml() !!}
+                                        {!! svg('flag-4x3-' . \Illuminate\Support\Str::of(data_get($game, 'teamHome.code'))->lower()->value(), ['class' => 'w-6'])->toHtml() !!}
                                     </div>
                                     <div style="display: inline-block">
 {{--                                    {{ \CountryEnums\Country::from(data_get($game, 'teamHome.code'))?->label() }}--}}
@@ -37,7 +37,7 @@
 
                                 <td class="py-3 px-4">
                                     <div style="display: inline-block">
-                                    {!! svg('flag-4x3-' . data_get($game, 'teamAway.code'), ['class' => 'w-6'])->toHtml() !!}
+                                    {!! svg('flag-4x3-' . \Illuminate\Support\Str::of(data_get($game, 'teamAway.code'))->lower()->value(), ['class' => 'w-6'])->toHtml() !!}
                                     </div>
                                     <div style="display: inline-block">
 {{--                                    {{ \CountryEnums\Country::from(data_get($game, 'teamAway.code'))?->label() }}--}}
