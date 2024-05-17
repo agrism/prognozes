@@ -8,6 +8,8 @@ use App\Models\Game;
 use App\ValueObjects\AdminTable\AdminTable;
 use App\ValueObjects\AdminTable\AdminTableCell;
 use App\ValueObjects\AdminTable\AdminTableRow;
+use Carbon\Carbon;
+use Exception;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
@@ -67,6 +69,13 @@ class GameController extends Controller
     {
         $model = Game::query()->where('id', $id)->first();
         foreach ($request->all() as $key => $value){
+            if(in_array($key, ['created_at', 'updated_at', 'deleted_at'])){
+                continue;
+            }
+
+
+            $value = $this->ifDateConvertToUTC($value);
+
             $model->{$key} = $value;
         }
         $model->save();
@@ -112,6 +121,10 @@ HTML;
                 $adminTableCells = [];
 
                 foreach ($game->getAttributes() as $column => $value) {
+                    if(in_array($column, ['created_at', 'updated_at', 'deleted_at'])){
+                        continue;
+                    }
+
                     if ($column === 'team_home_id') {
                         $adminTableCells[] = new AdminTableCell(
                             columnName: $column,
@@ -134,7 +147,7 @@ HTML;
 
                     $adminTableCells[] = new AdminTableCell(
                         columnName: $column,
-                        value: $value,
+                        value: $this->ifDateConvertToLocalTimeZone($value),
                         isSelect: false,
                         options: []
                     );
@@ -170,6 +183,34 @@ HTML;
 
         $this->adminTable = new AdminTable(title: 'Games', rows: $adminTableRows);
         return $this;
+    }
+
+    protected function ifDateConvertToUTC(string $datetime, string $localTimeZone = 'Europe/Riga'): string
+    {
+        try {
+            $dateFormat = 'Y-m-d H:i:s';
+            $carbon = Carbon::createFromFormat($dateFormat, $datetime, $localTimeZone);
+            if($carbon->format($dateFormat) == $datetime){
+                $datetime = $carbon->setTimezone('UTC')->format($dateFormat);
+            }
+        } catch (Exception){
+        }
+
+        return $datetime;
+    }
+
+    protected function ifDateConvertToLocalTimeZone(string $datetime, string $localTimeZone = 'Europe/Riga'): string
+    {
+        try {
+            $dateFormat = 'Y-m-d H:i:s';
+            $carbon = Carbon::createFromFormat($dateFormat, $datetime);
+            if($carbon->format($dateFormat) == $datetime){
+                $datetime = $carbon->setTimezone($localTimeZone)->format($dateFormat);
+            }
+        } catch (Exception){
+        }
+
+        return $datetime;
     }
 
 }
