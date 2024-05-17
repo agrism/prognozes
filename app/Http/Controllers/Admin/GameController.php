@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Enums\ResultTypeEnums;
 use App\Http\Controllers\Controller;
 use App\Models\Forecast;
 use App\Models\Game;
@@ -141,6 +142,19 @@ HTML;
                             value: $value,
                             isSelect: true,
                             options: $game->teamAway->orderBy('code')->pluck('code', 'id')->toArray(),
+                        );
+                        continue;
+                    }
+
+                    if ($column === 'result_type') {
+                        $adminTableCells[] = new AdminTableCell(
+                            columnName: $column,
+                            value: $value,
+                            isSelect: true,
+                            options: array_reduce(ResultTypeEnums::cases(), function($result = [], $item){
+                                $result[$item->value] = $item->name;
+                                return $result;
+                            }),
                         );
                         continue;
                     }
