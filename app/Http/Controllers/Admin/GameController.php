@@ -117,7 +117,7 @@ HTML;
     {
         $adminTableRows = [];
 
-        Game::query()->with(['teamHome', 'teamAway'])->orderBy('date')->orderBy('id')->get()->each(
+        Game::query()->with(['teamHome', 'teamAway'])->orderBy('date', 'desc')->orderBy('id', 'desc')->get()->each(
             function (Game $game) use (&$adminTableRows) {
                 $adminTableCells = [];
 
