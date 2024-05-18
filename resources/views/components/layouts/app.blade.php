@@ -76,7 +76,7 @@
 
                             </form>
                         </li>
-                        @include('admin.menu')
+                        @include('admin.menu', ['ignoreHome' => true])
                     </ul>
                 </div>
 
