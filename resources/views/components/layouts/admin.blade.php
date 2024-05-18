@@ -18,10 +18,12 @@
 
 <body hx-headers='{"X-CSRF-TOKEN": "{{ csrf_token() }}"}'>
 <div class="flex flex-col justify-center min-h-screen antialiased">
+    <ul>
+        @include('admin.menu')
+    </ul>
     <x-alerts.errors/>
     <x-alerts.status/>
     <div class="container mx-auto top-600 h-screen">
-
         {{ $slot }}
     </div>
 </div>

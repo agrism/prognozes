@@ -76,6 +76,7 @@
 
                             </form>
                         </li>
+                        @include('admin.menu')
                     </ul>
                 </div>
 
