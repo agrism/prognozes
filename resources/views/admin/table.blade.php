@@ -13,7 +13,7 @@
                 <div style="display: inline-block; width: 120px;">
                     {{$cell->columnName}}
                 </div>
-                <select name="{{$cell->columnName}}">
+                <select name="{{$cell->columnName}}" style="margin-left: -4px;min-width: 200px;">
                     @foreach($cell->options as $key => $value)
                     <option value="{{$key}}"
                             @if($cell->value === $key) selected @endif
@@ -30,7 +30,7 @@
         @endif
 
         @if($cell->value)
-            {!! '<div><div style="display: inline-block; width: 120px;">'.$cell->columnName.':</div><input type="text" name="'.$cell->columnName.'" value="'.$cell->value.'"></div>' !!}
+            {!! '<div><div style="display: inline-block; width: 120px;">'.$cell->columnName.':</div><input style="min-width:192;" type="'.($cell->isDate ? 'datetime-local' : 'text').'" name="'.$cell->columnName.'" value="'.$cell->value.'"></div>' !!}
         @endif
     @endforeach
 

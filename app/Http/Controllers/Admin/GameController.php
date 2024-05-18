@@ -159,6 +159,18 @@ HTML;
                         continue;
                     }
 
+                    if($this->getCarbonIfDate($value)){
+                        $adminTableCells[] = new AdminTableCell(
+                            columnName: $column,
+                            value: $value,
+                            isSelect: false,
+                            isAction: false,
+                            isDate: true,
+                            options: [],
+                        );
+                        continue;
+                    }
+
                     $adminTableCells[] = new AdminTableCell(
                         columnName: $column,
                         value: $this->ifDateConvertToLocalTimeZone($value),
@@ -201,13 +213,9 @@ HTML;
 
     protected function ifDateConvertToUTC(string $datetime, string $localTimeZone = 'Europe/Riga'): string
     {
-        try {
-            $dateFormat = 'Y-m-d H:i:s';
-            $carbon = Carbon::createFromFormat($dateFormat, $datetime, $localTimeZone);
-            if($carbon->format($dateFormat) == $datetime){
-                $datetime = $carbon->setTimezone('UTC')->format($dateFormat);
-            }
-        } catch (Exception){
+        $dateFormat = 'Y-m-d H:i:s';
+        if ($carbon = $this->getCarbonIfDate(date: $datetime, timeZone: $localTimeZone)) {
+            $datetime = $carbon->setTimezone('UTC')->format($dateFormat);
         }
 
         return $datetime;
@@ -215,16 +223,25 @@ HTML;
 
     protected function ifDateConvertToLocalTimeZone(string $datetime, string $localTimeZone = 'Europe/Riga'): string
     {
-        try {
-            $dateFormat = 'Y-m-d H:i:s';
-            $carbon = Carbon::createFromFormat($dateFormat, $datetime);
-            if($carbon->format($dateFormat) == $datetime){
-                $datetime = $carbon->setTimezone($localTimeZone)->format($dateFormat);
-            }
-        } catch (Exception){
+        $dateFormat = 'Y-m-d H:i:s';
+        if ($carbon = $this->getCarbonIfDate(date: $datetime, timeZone: 'UTC')) {
+            $datetime = $carbon->setTimezone($localTimeZone)->format($dateFormat);
         }
 
         return $datetime;
     }
 
+    protected function getCarbonIfDate(string $date, string $timeZone = 'UTC'): ?Carbon
+    {
+        try {
+            $dateFormat = 'Y-m-d H:i:s';
+            $carbon = Carbon::createFromFormat($dateFormat, $date, $timeZone);
+            if($carbon->format($dateFormat) == $date){
+                return $carbon;
+            }
+        } catch (Exception){
+        }
+
+        return null;
+    }
 }

@@ -9,6 +9,7 @@ readonly class AdminTableCell
         public mixed $value,
         public bool $isSelect = false,
         public bool $isAction = false,
+        public bool $isDate = false,
         public array $options = [],
     ) {
     }
